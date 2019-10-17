@@ -1,3 +1,3 @@
 # cesc-seata-cli
 
-一个使用Servlet实现Seata的sample
+一个使用Servlet实现的 Seata sample
