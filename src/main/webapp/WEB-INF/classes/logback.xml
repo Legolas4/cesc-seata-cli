@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
+scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。
+debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 上下文变量设置,用来定义变量值,其中name的值是变量的名称，value的值时变量定义的值。
+    通过<property>定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。 -->
+    <!--<property name="LOG_HOME" value="/usr/local/src/tomcat/apache-tomcat-8.0.52/bin/logs"/>-->
+    <property name="LOG_HOME" value="G:\logs" />
+    <property name="CONTEXT_NAME" value="osp-logback"/>
+    <!-- 上下文名称：<contextName>, 每个logger都关联到logger上下文，默认上下文名称为“default”。
+    但可以使用<contextName>设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改。 -->
+    <contextName>${CONTEXT_NAME}</contextName>
+    <!-- <appender>负责写日志的组件，有两个必要属性name和class。
+    name指定appender名称，class指定appender的实现类。 -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+            <!--<level>ERROR</level>-->
+            <!--<onMatch>DENY</onMatch>-->
+            <!--<onMismatch>ACCEPT</onMismatch>-->
+        <!--</filter>-->
+        <!-- 对日志进行格式化 -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}|%thread|%-5level|%class|%method|%line|%msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}|%thread|%-5level|%class|%method|%line|%msg%n</pattern>
+        </encoder>
+        <Encoding>UTF-8</Encoding>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/seata-log.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+    <!-- 特殊的<logger>元素，是根logger。只有一个level属性，应为已经被命名为"root".
+    level:设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR，默认是DEBUG。
+    <root>可以包含零个或多个<appender-ref>元素，标识这个appender将会添加到这个loger。 -->
+    <!--<root level="DEBUG">-->
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
